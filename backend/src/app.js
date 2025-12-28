@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
+import authRoutes from './routes/auth.routes.js'
 
 dotenv.config()
 
@@ -17,8 +18,9 @@ app.use(
     credentials: true
   })
 )
+app.use('/api/auth', authRoutes)
 
-// Health check
+// Routes
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'ShoePapi API running' })
 })
