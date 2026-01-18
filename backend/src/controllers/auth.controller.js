@@ -2,66 +2,40 @@ import User from '../models/User.js'
 import { hashPassword, comparePassword } from '../utils/hashPassword.js'
 import { generateToken } from '../utils/generateToken.js'
 
-// REGISTER
 export const register = async (req, res) => {
   try {
-    const { name, email, password, region, phoneNumber } = req.body
-
-    // check if user exists
-    const existingUser = await User.findOne({ email })
-    if (existingUser)
-      return res.status(400).json({ message: 'Email already registered' })
+    const { name, email, password, region, phone } = req.body
+    const exists = await User.findOne({ email })
+    if (exists) return res.status(400).json({ message: 'User already exists' })
 
     const hashed = await hashPassword(password)
-
     const user = await User.create({
       name,
       email,
       password: hashed,
       region,
-      phoneNumber
+      phone
     })
+    const token = generateToken(user)
 
-    const token = generateToken(user._id)
-
-    res.status(201).json({
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      },
-      token
-    })
-  } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(201).json({ user, token })
+  } catch (err) {
+    res.status(500).json({ message: err.message })
   }
 }
 
-// LOGIN
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body
-
     const user = await User.findOne({ email })
     if (!user) return res.status(400).json({ message: 'Invalid credentials' })
 
-    const isMatch = await comparePassword(password, user.password)
-    if (!isMatch)
-      return res.status(400).json({ message: 'Invalid credentials' })
+    const match = await comparePassword(password, user.password)
+    if (!match) return res.status(400).json({ message: 'Invalid credentials' })
 
-    const token = generateToken(user._id)
-
-    res.status(200).json({
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      },
-      token
-    })
-  } catch (error) {
-    res.status(500).json({ message: error.message })
+    const token = generateToken(user)
+    res.json({ user, token })
+  } catch (err) {
+    res.status(500).json({ message: err.message })
   }
 }
