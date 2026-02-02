@@ -1,9 +1,8 @@
-// src/api/axios.js
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
-  withCredentials: true // needed for sending cookies (JWT if stored in cookies)
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  withCredentials: true
 })
 
 export default api

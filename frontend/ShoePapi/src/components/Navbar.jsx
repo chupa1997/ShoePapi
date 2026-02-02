@@ -3,12 +3,14 @@ import { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
 
 export default function Navbar() {
-  const { user } = useContext(AppContext)
+  const ctx = useContext(AppContext)
+  const user = ctx?.user
 
   return (
     <nav>
       <Link to="/">ShoePapi</Link>
       <Link to="/products">Products</Link>
+
       {user ? (
         <>
           <Link to="/profile">{user.name}</Link>

@@ -1,49 +1,63 @@
-import { useState, useContext } from 'react'
-import { registerUser } from '../api/auth'
-import { AppContext } from '../context/AppContext'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { api } from '../lib/api'
+import { useNavigate, Link } from 'react-router-dom'
 
 export default function Register() {
-  const { setUser } = useContext(AppContext)
+  const nav = useNavigate()
   const [form, setForm] = useState({ name: '', email: '', password: '' })
-  const navigate = useNavigate()
+  const [err, setErr] = useState('')
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value })
+  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
-  const handleSubmit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
+    setErr('')
     try {
-      const userData = await registerUser(form)
-      setUser(userData)
-      navigate('/')
-    } catch {
-      alert('Registration failed')
+      await api.post('/auth/register', form)
+      nav('/login')
+    } catch (error) {
+      setErr(error?.response?.data?.message || 'Something went wrong')
     }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        name="name"
-        placeholder="Name"
-        value={form.name}
-        onChange={handleChange}
-      />
-      <input
-        name="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
-      />
-      <input
-        name="password"
-        placeholder="Password"
-        type="password"
-        value={form.password}
-        onChange={handleChange}
-      />
-      <button type="submit">Register</button>
-    </form>
+    <div style={{ maxWidth: 420, margin: '40px auto' }}>
+      <h2>Register</h2>
+
+      <form onSubmit={onSubmit}>
+        <input
+          name="name"
+          placeholder="Name"
+          value={form.name}
+          onChange={onChange}
+        />
+        <br />
+        <br />
+        <input
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={onChange}
+        />
+        <br />
+        <br />
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={onChange}
+        />
+        <br />
+        <br />
+        <button type="submit">Create Account</button>
+      </form>
+
+      {err && <p style={{ color: 'red' }}>{err}</p>}
+
+      <p>
+        Already have an account? <Link to="/login">Login</Link>
+      </p>
+    </div>
   )
 }
