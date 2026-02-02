@@ -11,7 +11,7 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Welcome to ShoePapi</h1>
+      <h1 style={{ color: 'red' }}>THIS IS HOME ✅</h1>
       <div className="products-grid">
         {products.map((p) => (
           <ProductCard key={p._id} product={p} />

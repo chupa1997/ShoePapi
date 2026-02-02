@@ -1,0 +1,23 @@
+{
+  "name": "shoepapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chupa1997/ShoePapi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chupa1997/ShoePapi/issues"
+  },
+  "homepage": "https://github.com/chupa1997/ShoePapi#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
