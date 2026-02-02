@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { api } from '../lib/api' // axios instance
-import { useNavigate } from 'react-router-dom'
+import { api } from '../lib/api'
+import { useNavigate, Link } from 'react-router-dom'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -18,13 +18,14 @@ export default function Register() {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault() // 👈 مهم جدًا
+    e.preventDefault()
+    setError('')
 
     try {
-      await api.post('/api/auth/register', formData)
-      navigate('/login') // بعد النجاح
+      await api.post('/auth/register', formData)
+      navigate('/login')
     } catch (err) {
-      setError(err.response?.data?.message || 'Register failed')
+      setError(err?.response?.data?.message || 'Register failed')
     }
   }
 
@@ -39,14 +40,12 @@ export default function Register() {
           value={formData.name}
           onChange={handleChange}
         />
-
         <input
           name="email"
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
         />
-
         <input
           type="password"
           name="password"
@@ -54,9 +53,12 @@ export default function Register() {
           value={formData.password}
           onChange={handleChange}
         />
-
         <button type="submit">Register</button>
       </form>
+
+      <p>
+        Already have an account? <Link to="/login">Login</Link>
+      </p>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>

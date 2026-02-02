@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { api } from '../lib/api'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 
 export default function Home() {
   const nav = useNavigate()
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [err, setErr] = useState('')
 
   const logout = () => {
     localStorage.removeItem('token')
@@ -13,31 +14,38 @@ export default function Home() {
   }
 
   useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      nav('/login')
+      return
+    }
+
     ;(async () => {
       try {
         const res = await api.get('/auth/me')
         setUser(res.data)
       } catch (e) {
-        // غير مسجّل دخول
+        setErr('Session expired, please login again.')
+        localStorage.removeItem('token')
         nav('/login')
-      } finally {
-        setLoading(false)
       }
     })()
   }, [nav])
 
-  if (loading)
+  if (!user)
     return <p style={{ textAlign: 'center', marginTop: 40 }}>Loading...</p>
 
   return (
-    <div style={{ maxWidth: 720, margin: '40px auto' }}>
-      <h2>Home</h2>
-      <p>
-        Welcome, <b>{user?.name}</b>
-      </p>
-      <p>{user?.email}</p>
+    <>
+      <Navbar user={user} />
 
-      <button onClick={logout}>Logout</button>
-    </div>
+      <div style={{ maxWidth: 720, margin: '40px auto' }}>
+        <h2>Home</h2>
+        <p>
+          Welcome, <b>{user.name}</b>
+        </p>
+        <p>{user.email}</p>
+      </div>
+    </>
   )
 }
