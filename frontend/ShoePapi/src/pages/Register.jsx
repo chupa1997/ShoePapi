@@ -1,63 +1,64 @@
 import { useState } from 'react'
-import { api } from '../lib/api'
-import { useNavigate, Link } from 'react-router-dom'
+import { api } from '../lib/api' // axios instance
+import { useNavigate } from 'react-router-dom'
 
 export default function Register() {
-  const nav = useNavigate()
-  const [form, setForm] = useState({ name: '', email: '', password: '' })
-  const [err, setErr] = useState('')
+  const navigate = useNavigate()
 
-  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  })
 
-  const onSubmit = async (e) => {
-    e.preventDefault()
-    setErr('')
+  const [error, setError] = useState('')
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault() // 👈 مهم جدًا
+
     try {
-      await api.post('/auth/register', form)
-      nav('/login')
-    } catch (error) {
-      setErr(error?.response?.data?.message || 'Something went wrong')
+      await api.post('/api/auth/register', formData)
+      navigate('/login') // بعد النجاح
+    } catch (err) {
+      setError(err.response?.data?.message || 'Register failed')
     }
   }
 
   return (
-    <div style={{ maxWidth: 420, margin: '40px auto' }}>
+    <div>
       <h2>Register</h2>
 
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit}>
         <input
           name="name"
           placeholder="Name"
-          value={form.name}
-          onChange={onChange}
+          value={formData.name}
+          onChange={handleChange}
         />
-        <br />
-        <br />
+
         <input
           name="email"
           placeholder="Email"
-          value={form.email}
-          onChange={onChange}
+          value={formData.email}
+          onChange={handleChange}
         />
-        <br />
-        <br />
+
         <input
-          name="password"
           type="password"
+          name="password"
           placeholder="Password"
-          value={form.password}
-          onChange={onChange}
+          value={formData.password}
+          onChange={handleChange}
         />
-        <br />
-        <br />
-        <button type="submit">Create Account</button>
+
+        <button type="submit">Register</button>
       </form>
 
-      {err && <p style={{ color: 'red' }}>{err}</p>}
-
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   )
 }
