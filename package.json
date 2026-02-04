@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "test": "echo \"Error: no test specified\" && exit 1"
+=======
+    "dev": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\""
+>>>>>>> 01dd89e8b8235c468d1da3e1138d4a88942ddbd6
   },
   "repository": {
     "type": "git",
@@ -13,9 +17,19 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+<<<<<<< HEAD
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/chupa1997/ShoePapi/issues"
   },
   "homepage": "https://github.com/chupa1997/ShoePapi#readme"
+=======
+  "bugs": {
+    "url": "https://github.com/chupa1997/ShoePapi/issues"
+  },
+  "homepage": "https://github.com/chupa1997/ShoePapi#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+>>>>>>> 01dd89e8b8235c468d1da3e1138d4a88942ddbd6
 }
